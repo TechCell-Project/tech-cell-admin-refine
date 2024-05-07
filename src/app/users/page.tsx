@@ -1,68 +1,35 @@
 "use client";
 
-import { GetManyResponse, useMany, useNavigation } from "@refinedev/core";
+import { useNavigation } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef, flexRender } from "@tanstack/react-table";
-import React from "react";
+import { useMemo } from "react";
 
-export default function BlogPostList() {
-  const columns = React.useMemo<ColumnDef<any>[]>(
+export default function CategoryList() {
+  const { edit, show, create } = useNavigation();
+
+  const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
         id: "id",
-        accessorKey: "id",
+        accessorKey: "_id",
         header: "ID",
       },
       {
-        id: "title",
-        accessorKey: "title",
-        header: "Title",
+        id: "email",
+        accessorKey: "email",
+        header: "Email",
       },
       {
-        id: "content",
-        accessorKey: "content",
-        header: "Content",
-      },
-      {
-        id: "category",
-        header: "Category",
-        accessorKey: "category",
-        cell: function render({ getValue, table }) {
-          const meta = table.options.meta as {
-            categoryData: GetManyResponse;
-          };
-
-          try {
-            const category = meta.categoryData?.data?.find(
-              (item) => item.id == getValue<any>()?.id
-            );
-
-            return category?.title ?? "Loading...";
-          } catch (error) {
-            return null;
-          }
-        },
-      },
-      {
-        id: "status",
-        accessorKey: "status",
-        header: "Status",
-      },
-      {
-        id: "createdAt",
-        accessorKey: "createdAt",
-        header: "Created At",
-        cell: function render({ getValue }) {
-          return new Date(getValue<any>()).toLocaleString(undefined, {
-            timeZone: "UTC",
-          });
-        },
+        id: "role",
+        accessorKey: "role",
+        header: "Role",
       },
       {
         id: "actions",
         accessorKey: "id",
         header: "Actions",
-        cell: function render({ getValue }) {
+        cell: function render({ row }) {
           return (
             <div
               style={{
@@ -74,14 +41,14 @@ export default function BlogPostList() {
             >
               <button
                 onClick={() => {
-                  show("blog_posts", getValue() as string);
+                  show("users", row.original._id);
                 }}
               >
                 Show
               </button>
               <button
                 onClick={() => {
-                  edit("blog_posts", getValue() as string);
+                  edit("users", row.original._id);
                 }}
               >
                 Edit
@@ -91,18 +58,14 @@ export default function BlogPostList() {
         },
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
-  const { edit, show, create } = useNavigation();
 
   const {
     getHeaderGroups,
     getRowModel,
     setOptions,
-    refineCore: {
-      tableQueryResult: { data: tableData },
-    },
     getState,
     setPageIndex,
     getCanPreviousPage,
@@ -115,20 +78,10 @@ export default function BlogPostList() {
     columns,
   });
 
-  const { data: categoryData } = useMany({
-    resource: "categories",
-    ids:
-      tableData?.data?.map((item) => item?.category?.id).filter(Boolean) ?? [],
-    queryOptions: {
-      enabled: !!tableData?.data,
-    },
-  });
-
   setOptions((prev) => ({
     ...prev,
     meta: {
       ...prev.meta,
-      categoryData,
     },
   }));
 
@@ -141,8 +94,8 @@ export default function BlogPostList() {
           justifyContent: "space-between",
         }}
       >
-        <h1>{"List"}</h1>
-        <button onClick={() => create("blog_posts")}>{"Create"}</button>
+        <h1>List</h1>
+        <button onClick={() => create("users")}>Create</button>
       </div>
       <div style={{ maxWidth: "100%", overflowY: "scroll" }}>
         <table>
@@ -200,7 +153,7 @@ export default function BlogPostList() {
           </strong>
         </span>
         <span>
-          | {"Go"}:{" "}
+          | Go:{" "}
           <input
             type="number"
             defaultValue={getState().pagination.pageIndex + 1}
@@ -218,7 +171,7 @@ export default function BlogPostList() {
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              {"Show"} {pageSize}
+              Show {pageSize}
             </option>
           ))}
         </select>

@@ -1,4 +1,4 @@
 {
-  "cSpell.words": ["refinedev"],
-  "conventionalCommits.scopes": ["auth"]
+  "cSpell.words": ["refinedev", "tanstack"],
+  "conventionalCommits.scopes": ["auth", "users"]
 }
