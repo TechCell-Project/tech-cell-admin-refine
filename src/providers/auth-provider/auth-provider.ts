@@ -1,15 +1,24 @@
 "use client";
 
-import { useToast } from "@components/ui/use-toast";
 import { AuthProvider } from "@refinedev/core";
-import { AuthApi, AuthEmailLoginDto } from "@techcell/node-sdk";
+import {
+  AuthApi,
+  AuthEmailLoginDto,
+  LoginResponseDto,
+  RefreshTokenResponseDto,
+} from "@techcell/node-sdk";
 import Cookies from "js-cookie";
-
 import { toast } from "@/components/ui/use-toast";
+import { AuthActionResponse } from "@refinedev/core/dist/contexts/auth/types";
 
 const authApi = new AuthApi();
 
-export const authProvider: AuthProvider = {
+export const authProvider: AuthProvider & {
+  refresh: () => Promise<
+    AuthActionResponse & { tokenData?: RefreshTokenResponseDto }
+  >;
+  getAuthData: () => LoginResponseDto | null;
+} = {
   login: async ({
     email,
     password,
@@ -60,6 +69,68 @@ export const authProvider: AuthProvider = {
       success: true,
       redirectTo: "/login",
     };
+  },
+  refresh: async () => {
+    const auth = Cookies.get("auth");
+    if (!auth) {
+      return {
+        success: false,
+        error: {
+          name: "RefreshError",
+          message: "No auth token found",
+        },
+      };
+    }
+
+    try {
+      const user = await authApi.authControllerRefresh({
+        refreshTokenDto: {
+          refreshToken: JSON.parse(auth).refreshToken,
+        },
+      });
+
+      if (!user.data) {
+        toast({
+          title: "Error",
+          description: "Refresh failed",
+        });
+        throw new Error("Refresh failed");
+      }
+
+      Cookies.set(
+        "auth",
+        JSON.stringify({ ...JSON.parse(auth), ...user.data }),
+        {
+          expires: 30, // 30 days
+          path: "/",
+        }
+      );
+
+      return {
+        success: true,
+        tokenData: user.data,
+      };
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Refresh failed",
+      });
+      return {
+        success: false,
+        error: {
+          name: "LoginError",
+          message: "Refresh failed",
+        },
+      };
+    }
+  },
+  getAuthData: (): LoginResponseDto | null => {
+    const auth = Cookies.get("auth");
+    if (auth) {
+      const parsedUser: LoginResponseDto = JSON.parse(auth);
+      return parsedUser;
+    }
+    return null;
   },
   check: async () => {
     const auth = Cookies.get("auth");
