@@ -1,24 +1,21 @@
-"use client";
+'use client';
 
-import axiosInstance from "@lib/axios";
-import { CrudSort, DataProvider, Pagination } from "@refinedev/core";
+import axiosInstance from '@lib/axios';
+import { CrudSort, DataProvider, Pagination } from '@refinedev/core';
 
-function handlePagination(
-  searchParams: URLSearchParams,
-  pagination?: Pagination
-) {
+function handlePagination(searchParams: URLSearchParams, pagination?: Pagination) {
   const { current = 1, pageSize = 10 } = pagination ?? {};
-  searchParams.set("page", String(current));
-  searchParams.set("limit", String(pageSize));
+  searchParams.set('page', String(current));
+  searchParams.set('limit', String(pageSize));
   return searchParams;
 }
 
-function handleFilter(searchParams: URLSearchParams, filters?: Object) {
+function handleFilter(searchParams: URLSearchParams, filters?: object) {
   if (!filters) {
     return searchParams;
   }
 
-  searchParams.set("filter", JSON.stringify(filters));
+  searchParams.set('filter', JSON.stringify(filters));
   return searchParams;
 }
 
@@ -34,15 +31,15 @@ function handleSort(searchParams: URLSearchParams, sorters?: CrudSort[]) {
     };
   });
 
-  searchParams.set("sort", JSON.stringify(sortersMap));
+  searchParams.set('sort', JSON.stringify(sortersMap));
   return searchParams;
 }
 
-const apiUrl = "https://api.techcell.cloud/api";
+const apiUrl = 'https://api.techcell.cloud/api';
 
 export const dataProvider: Omit<
   Required<DataProvider>,
-  "getMany" | "createMany" | "updateMany" | "deleteMany"
+  'getMany' | 'createMany' | 'updateMany' | 'deleteMany'
   //   | "getOne"
   //   | "create"
   //   | "update"
@@ -95,16 +92,7 @@ export const dataProvider: Omit<
   getApiUrl: () => {
     return apiUrl;
   },
-  custom: async ({
-    url,
-    method,
-    meta,
-    filters,
-    sorters,
-    payload,
-    query,
-    headers,
-  }) => {
+  custom: async ({ url, method, meta, filters, sorters, payload, query, headers }) => {
     let searchParams = new URLSearchParams();
 
     searchParams = handleFilter(searchParams, filters);
@@ -118,20 +106,20 @@ export const dataProvider: Omit<
 
     let axiosResponse;
     switch (method) {
-      case "put":
-      case "post":
-      case "patch":
+      case 'put':
+      case 'post':
+      case 'patch':
         axiosResponse = await axiosInstance[method](url, payload, {
           headers,
         });
         break;
-      case "delete":
+      case 'delete':
         axiosResponse = await axiosInstance.delete(url, {
           data: payload,
           headers: headers,
         });
         break;
-      case "get":
+      case 'get':
       default:
         axiosResponse = await axiosInstance.get(requestUrl, { headers });
         break;

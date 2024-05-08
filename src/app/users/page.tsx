@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useNavigation } from "@refinedev/core";
-import { useTable } from "@refinedev/react-table";
-import { ColumnDef, flexRender } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useNavigation } from '@refinedev/core';
+import { useTable } from '@refinedev/react-table';
+import { ColumnDef, flexRender } from '@tanstack/react-table';
+import { useMemo } from 'react';
 
 export default function CategoryList() {
   const { edit, show, create } = useNavigation();
@@ -11,44 +11,44 @@ export default function CategoryList() {
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        id: "id",
-        accessorKey: "_id",
-        header: "ID",
+        id: 'id',
+        accessorKey: '_id',
+        header: 'ID',
       },
       {
-        id: "email",
-        accessorKey: "email",
-        header: "Email",
+        id: 'email',
+        accessorKey: 'email',
+        header: 'Email',
       },
       {
-        id: "role",
-        accessorKey: "role",
-        header: "Role",
+        id: 'role',
+        accessorKey: 'role',
+        header: 'Role',
       },
       {
-        id: "actions",
-        accessorKey: "id",
-        header: "Actions",
+        id: 'actions',
+        accessorKey: 'id',
+        header: 'Actions',
         cell: function render({ row }) {
           return (
             <div
               style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                gap: "4px",
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: '4px',
               }}
             >
               <button
                 onClick={() => {
-                  show("users", row.original._id);
+                  show('users', row.original._id);
                 }}
               >
                 Show
               </button>
               <button
                 onClick={() => {
-                  edit("users", row.original._id);
+                  edit('users', row.original._id);
                 }}
               >
                 Edit
@@ -59,7 +59,7 @@ export default function CategoryList() {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   const {
@@ -86,18 +86,18 @@ export default function CategoryList() {
   }));
 
   return (
-    <div style={{ padding: "16px" }}>
+    <div style={{ padding: '16px' }}>
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <h1>List</h1>
-        <button onClick={() => create("users")}>Create</button>
+        <button onClick={() => create('users')}>Create</button>
       </div>
-      <div style={{ maxWidth: "100%", overflowY: "scroll" }}>
+      <div style={{ maxWidth: '100%', overflowY: 'scroll' }}>
         <table>
           <thead>
             {getHeaderGroups().map((headerGroup) => (
@@ -105,10 +105,7 @@ export default function CategoryList() {
                 {headerGroup.headers.map((header) => (
                   <th key={header.id}>
                     {!header.isPlaceholder &&
-                      flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
               </tr>
@@ -118,42 +115,34 @@ export default function CategoryList() {
             {getRowModel().rows.map((row) => (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div style={{ marginTop: "12px" }}>
-        <button
-          onClick={() => setPageIndex(0)}
-          disabled={!getCanPreviousPage()}
-        >
-          {"<<"}
+      <div style={{ marginTop: '12px' }}>
+        <button onClick={() => setPageIndex(0)} disabled={!getCanPreviousPage()}>
+          {'<<'}
         </button>
         <button onClick={() => previousPage()} disabled={!getCanPreviousPage()}>
-          {"<"}
+          {'<'}
         </button>
         <button onClick={() => nextPage()} disabled={!getCanNextPage()}>
-          {">"}
+          {'>'}
         </button>
-        <button
-          onClick={() => setPageIndex(getPageCount() - 1)}
-          disabled={!getCanNextPage()}
-        >
-          {">>"}
+        <button onClick={() => setPageIndex(getPageCount() - 1)} disabled={!getCanNextPage()}>
+          {'>>'}
         </button>
         <span>
           <strong>
-            {" "}
-            {getState().pagination.pageIndex + 1} / {getPageCount()}{" "}
+            {' '}
+            {getState().pagination.pageIndex + 1} / {getPageCount()}{' '}
           </strong>
         </span>
         <span>
-          | Go:{" "}
+          | Go:{' '}
           <input
             type="number"
             defaultValue={getState().pagination.pageIndex + 1}
@@ -162,7 +151,7 @@ export default function CategoryList() {
               setPageIndex(page);
             }}
           />
-        </span>{" "}
+        </span>{' '}
         <select
           value={getState().pagination.pageSize}
           onChange={(e) => {

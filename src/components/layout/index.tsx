@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { PropsWithChildren } from "react";
-import { Breadcrumb } from "../breadcrumb";
-import { Menu } from "../menu";
+import { PropsWithChildren } from 'react';
+import { Breadcrumb } from '../breadcrumb';
+import { Menu } from '../menu';
 
 export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (

@@ -1,29 +1,23 @@
-"use client";
+'use client';
 
-import { AuthProvider } from "@refinedev/core";
+import { AuthProvider } from '@refinedev/core';
 import {
   AuthApi,
   AuthEmailLoginDto,
   LoginResponseDto,
   RefreshTokenResponseDto,
-} from "@techcell/node-sdk";
-import Cookies from "js-cookie";
-import { toast } from "@/components/ui/use-toast";
-import { AuthActionResponse } from "@refinedev/core/dist/contexts/auth/types";
+} from '@techcell/node-sdk';
+import Cookies from 'js-cookie';
+import { toast } from '@/components/ui/use-toast';
+import { AuthActionResponse } from '@refinedev/core/dist/contexts/auth/types';
 
 const authApi = new AuthApi();
 
 export const authProvider: AuthProvider & {
-  refresh: () => Promise<
-    AuthActionResponse & { tokenData?: RefreshTokenResponseDto }
-  >;
+  refresh: () => Promise<AuthActionResponse & { tokenData?: RefreshTokenResponseDto }>;
   getAuthData: () => LoginResponseDto | null;
 } = {
-  login: async ({
-    email,
-    password,
-    remember,
-  }: AuthEmailLoginDto & { remember: boolean }) => {
+  login: async ({ email, password, remember }: AuthEmailLoginDto & { remember: boolean }) => {
     try {
       const user = await authApi.authControllerLogin({
         authEmailLoginDto: {
@@ -34,50 +28,50 @@ export const authProvider: AuthProvider & {
 
       if (!user.data) {
         toast({
-          title: "Error",
-          description: "Invalid email or password",
+          title: 'Error',
+          description: 'Invalid email or password',
         });
-        throw new Error("Invalid email or password");
+        throw new Error('Invalid email or password');
       }
 
-      Cookies.set("auth", JSON.stringify(user.data), {
+      Cookies.set('auth', JSON.stringify(user.data), {
         expires: 30, // 30 days
-        path: "/",
+        path: '/',
       });
 
       return {
         success: true,
-        redirectTo: "/",
+        redirectTo: '/',
       };
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Invalid email or password",
+        title: 'Error',
+        description: 'Invalid email or password',
       });
       return {
         success: false,
         error: {
-          name: "LoginError",
-          message: "Invalid email or password",
+          name: 'LoginError',
+          message: 'Invalid email or password',
         },
       };
     }
   },
   logout: async () => {
-    Cookies.remove("auth", { path: "/" });
+    Cookies.remove('auth', { path: '/' });
     return {
       success: true,
-      redirectTo: "/login",
+      redirectTo: '/login',
     };
   },
   refresh: async () => {
-    const auth = Cookies.get("auth");
+    const auth = Cookies.get('auth');
     if (!auth) {
       return {
         success: false,
         error: {
-          name: "RefreshError",
-          message: "No auth token found",
+          name: 'RefreshError',
+          message: 'No auth token found',
         },
       };
     }
@@ -91,20 +85,16 @@ export const authProvider: AuthProvider & {
 
       if (!user.data) {
         toast({
-          title: "Error",
-          description: "Refresh failed",
+          title: 'Error',
+          description: 'Refresh failed',
         });
-        throw new Error("Refresh failed");
+        throw new Error('Refresh failed');
       }
 
-      Cookies.set(
-        "auth",
-        JSON.stringify({ ...JSON.parse(auth), ...user.data }),
-        {
-          expires: 30, // 30 days
-          path: "/",
-        }
-      );
+      Cookies.set('auth', JSON.stringify({ ...JSON.parse(auth), ...user.data }), {
+        expires: 30, // 30 days
+        path: '/',
+      });
 
       return {
         success: true,
@@ -112,20 +102,20 @@ export const authProvider: AuthProvider & {
       };
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Refresh failed",
+        title: 'Error',
+        description: 'Refresh failed',
       });
       return {
         success: false,
         error: {
-          name: "LoginError",
-          message: "Refresh failed",
+          name: 'LoginError',
+          message: 'Refresh failed',
         },
       };
     }
   },
   getAuthData: (): LoginResponseDto | null => {
-    const auth = Cookies.get("auth");
+    const auth = Cookies.get('auth');
     if (auth) {
       const parsedUser: LoginResponseDto = JSON.parse(auth);
       return parsedUser;
@@ -133,7 +123,7 @@ export const authProvider: AuthProvider & {
     return null;
   },
   check: async () => {
-    const auth = Cookies.get("auth");
+    const auth = Cookies.get('auth');
     if (auth) {
       return {
         authenticated: true,
@@ -143,11 +133,11 @@ export const authProvider: AuthProvider & {
     return {
       authenticated: false,
       logout: true,
-      redirectTo: "/login",
+      redirectTo: '/login',
     };
   },
   getPermissions: async () => {
-    const auth = Cookies.get("auth");
+    const auth = Cookies.get('auth');
     if (auth) {
       const parsedUser = JSON.parse(auth);
       return parsedUser.roles;
@@ -155,7 +145,7 @@ export const authProvider: AuthProvider & {
     return null;
   },
   getIdentity: async () => {
-    const auth = Cookies.get("auth");
+    const auth = Cookies.get('auth');
     if (auth) {
       const parsedUser = JSON.parse(auth);
       return parsedUser;
