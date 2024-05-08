@@ -20,7 +20,7 @@ export default function CategoryCreate() {
         <div>
           <button
             onClick={() => {
-              list('categories');
+              list('users');
             }}
           >
             List
