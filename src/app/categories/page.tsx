@@ -5,6 +5,9 @@ import { useTable } from '@refinedev/react-table';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
 import React from 'react';
 
+/**
+ * This just a example to show you how to create a list page for core of this framework.
+ */
 export default function CategoryList() {
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => [
