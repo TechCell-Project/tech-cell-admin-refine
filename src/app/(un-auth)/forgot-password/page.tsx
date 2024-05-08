@@ -7,7 +7,7 @@ import { useTranslate } from '@refinedev/core';
 import { Button } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 
-export const ForgotPassword = memo(() => {
+function ForgotPassword() {
   const translate = useTranslate();
   const router = useRouter();
 
@@ -36,8 +36,6 @@ export const ForgotPassword = memo(() => {
       </div>
     </div>
   );
-});
+}
 
-ForgotPassword.displayName = 'ForgotPassword';
-
-export default ForgotPassword;
+export default memo(ForgotPassword);

@@ -5,11 +5,7 @@ import { DialogDisplay } from '@/components/display';
 import { ForgotPasswordForm } from '@/components/form/forgot-password';
 import { useRouter } from 'next/navigation';
 
-export type ForgotPasswordProps = {
-  handleClose: () => void;
-};
-
-export const ForgotPasswordParallel = memo(() => {
+function ForgotPasswordParallel() {
   const router = useRouter();
 
   const handleClose = () => {
@@ -26,8 +22,6 @@ export const ForgotPasswordParallel = memo(() => {
       <ForgotPasswordForm handleClose={handleClose} />
     </DialogDisplay>
   );
-});
+}
 
-ForgotPasswordParallel.displayName = 'ForgotPassword';
-
-export default ForgotPasswordParallel;
+export default memo(ForgotPasswordParallel);
