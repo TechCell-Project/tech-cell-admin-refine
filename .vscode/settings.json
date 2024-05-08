@@ -1,4 +1,14 @@
 {
-  "cSpell.words": ["refinedev", "tanstack"],
-  "conventionalCommits.scopes": ["auth", "users"]
+  "cSpell.words": [
+    "Kbar",
+    "nextjs",
+    "Oqabo",
+    "refinedev",
+    "tanstack"
+  ],
+  "conventionalCommits.scopes": [
+    "auth",
+    "users",
+    "pages"
+  ]
 }
