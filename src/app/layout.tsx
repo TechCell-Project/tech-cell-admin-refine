@@ -11,6 +11,8 @@ import '@/styles/global.css';
 
 import { Toaster } from '@/components/ui/toaster';
 import Favicon from '@/public/images/favicon.ico';
+import { ThemeProvider } from '@/providers/theme-provider';
+import { quickSandFont } from '@/config/font';
 
 export const metadata: Metadata = {
   title: 'Trang quản trị Techcell',
@@ -30,60 +32,67 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" style={{ colorScheme: 'light' }} className={`${quickSandFont.className} light`}>
+      <body className="min-h-screen flex justify-center items-center">
         <Suspense>
-          <RefineKbarProvider>
-            <DevtoolsProvider>
-              <Refine
-                routerProvider={routerProvider}
-                dataProvider={dataProvider}
-                authProvider={authProvider}
-                resources={[
-                  {
-                    name: 'staffs',
-                    list: '/users/staffs',
-                    create: '/users/staffs/create',
-                    edit: '/users/staffs/edit/:id',
-                    show: '/users/staffs/show/:id',
-                    meta: {
-                      canDelete: false,
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <RefineKbarProvider>
+              <DevtoolsProvider>
+                <Refine
+                  routerProvider={routerProvider}
+                  dataProvider={dataProvider}
+                  authProvider={authProvider}
+                  resources={[
+                    {
+                      name: 'staffs',
+                      list: '/users/staffs',
+                      create: '/users/staffs/create',
+                      edit: '/users/staffs/edit/:id',
+                      show: '/users/staffs/show/:id',
+                      meta: {
+                        canDelete: false,
+                      },
                     },
-                  },
-                  {
-                    name: 'customers',
-                    list: '/users/customers',
-                    create: '/users/customers/create',
-                    edit: '/users/customers/edit/:id',
-                    show: '/users/customers/show/:id',
-                    meta: {
-                      canDelete: false,
+                    {
+                      name: 'customers',
+                      list: '/users/customers',
+                      create: '/users/customers/create',
+                      edit: '/users/customers/edit/:id',
+                      show: '/users/customers/show/:id',
+                      meta: {
+                        canDelete: false,
+                      },
                     },
-                  },
-                  {
-                    name: 'categories',
-                    list: '/categories',
-                    create: '/categories/create',
-                    edit: '/categories/edit/:id',
-                    show: '/categories/show/:id',
-                    meta: {
-                      canDelete: true,
+                    {
+                      name: 'categories',
+                      list: '/categories',
+                      create: '/categories/create',
+                      edit: '/categories/edit/:id',
+                      show: '/categories/show/:id',
+                      meta: {
+                        canDelete: true,
+                      },
                     },
-                  },
-                ]}
-                options={{
-                  syncWithLocation: true,
-                  warnWhenUnsavedChanges: true,
-                  useNewQueryKeys: true,
-                  projectId: 'nOqabo-012lBO-NnRYWu',
-                }}
-              >
-                {children}
-                <Toaster />
-                <RefineKbar />
-              </Refine>
-            </DevtoolsProvider>
-          </RefineKbarProvider>
+                  ]}
+                  options={{
+                    syncWithLocation: true,
+                    warnWhenUnsavedChanges: true,
+                    useNewQueryKeys: true,
+                    projectId: 'nOqabo-012lBO-NnRYWu',
+                  }}
+                >
+                  <main className="w-full">{children}</main>
+                  <Toaster />
+                  <RefineKbar />
+                </Refine>
+              </DevtoolsProvider>
+            </RefineKbarProvider>
+          </ThemeProvider>
         </Suspense>
       </body>
     </html>

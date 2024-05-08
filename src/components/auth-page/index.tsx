@@ -2,6 +2,7 @@
 
 import type { AuthPageProps as AuthPagePropsCore, HttpError } from '@refinedev/core';
 import { AuthPage as AuthPageBase } from '@/pages/auth';
+import { ThemeToggle } from '@/components/utils/theme-toggle';
 
 type AuthPageProps = AuthPagePropsCore & {
   authenticated?: boolean;
@@ -14,10 +15,12 @@ export const AuthPage = (props: AuthPageProps) => {
     <AuthPageBase
       {...props}
       renderContent={(content) => (
-        <div>
-          <p className="p-2 text-blue-700 bg-blue-200 border border-blue-300 text-center"></p>
+        <>
+          <div className="absolute top-5 right-5">
+            <ThemeToggle />
+          </div>
           {content}
-        </div>
+        </>
       )}
     />
   );
