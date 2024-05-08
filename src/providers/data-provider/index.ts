@@ -15,7 +15,7 @@ function handleFilter(searchParams: URLSearchParams, filters?: object) {
     return searchParams;
   }
 
-  searchParams.set('filter', JSON.stringify(filters));
+  searchParams.set('filters', JSON.stringify(filters));
   return searchParams;
 }
 
@@ -40,10 +40,6 @@ const apiUrl = 'https://api.techcell.cloud/api';
 export const dataProvider: Omit<
   Required<DataProvider>,
   'getMany' | 'createMany' | 'updateMany' | 'deleteMany'
-  //   | "getOne"
-  //   | "create"
-  //   | "update"
-  //   | "deleteOne"
 > = {
   getList: async ({ resource, pagination, filters, sorters, meta }) => {
     const url = `${apiUrl}/${resource}`;
@@ -56,17 +52,19 @@ export const dataProvider: Omit<
 
     const { data } = await axiosInstance.get(`${url}?${searchParams}`);
 
-    // without pagination
-    if (Array.isArray(data)) {
-      return {
-        data,
-        total: data.length,
-      };
-    }
-    // with pagination
+    const page = pagination?.current || 1;
+    const pageSize = pagination?.pageSize || 1;
+    const lengthData = data?.data?.length || 0;
+
+    const total = data.hasNextPage
+      ? // If hasNextPage return `true` from api, increment the total by pageSize by one to enable infinite scrolling
+        pageSize * (page + 1)
+      : // Calculate the total data of all pages
+        pageSize * page - (pageSize - lengthData);
+
     return {
       data: data.data,
-      total: data.total,
+      total: total,
     };
   },
   getOne: async ({ resource, id }) => {

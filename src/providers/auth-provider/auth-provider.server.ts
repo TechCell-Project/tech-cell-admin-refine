@@ -9,6 +9,7 @@ export const authProviderServer: Pick<AuthProvider, 'check'> = {
     if (auth) {
       return {
         authenticated: true,
+        redirectTo: '/',
       };
     }
 

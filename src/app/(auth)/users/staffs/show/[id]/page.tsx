@@ -3,10 +3,10 @@
 import { useNavigation, useResourceParams, useShow } from '@refinedev/core';
 import { User } from '@techcell/node-sdk';
 
-export default function CategoryShow() {
+export default function StaffShow() {
   const { edit, list } = useNavigation();
   const { id } = useResourceParams();
-  const { queryResult } = useShow<User>({});
+  const { queryResult } = useShow<User>({ id, resource: 'users' });
   const { data } = queryResult;
 
   const record = data?.data;
@@ -22,8 +22,8 @@ export default function CategoryShow() {
       >
         <h1>Show</h1>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={() => list('users')}>List</button>
-          <button onClick={() => edit('users', id ?? '')}>Edit</button>
+          <button onClick={() => list('staffs')}>List</button>
+          <button onClick={() => edit('staffs', id ?? '')}>Edit</button>
         </div>
       </div>
       <div>
