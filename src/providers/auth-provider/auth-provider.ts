@@ -10,6 +10,7 @@ import {
 import Cookies from 'js-cookie';
 import { toast } from '@/components/ui/use-toast';
 import { AuthActionResponse } from '@refinedev/core/dist/contexts/auth/types';
+import { AuthForgotPw } from '@/components/validators';
 
 const authApi = new AuthApi();
 
@@ -28,6 +29,7 @@ export const authProvider: AuthProvider & {
 
       if (!user.data) {
         toast({
+          variant: 'destructive',
           title: 'Error',
           description: 'Invalid email or password',
         });
@@ -45,6 +47,7 @@ export const authProvider: AuthProvider & {
       };
     } catch (error) {
       toast({
+        variant: 'destructive',
         title: 'Error',
         description: 'Invalid email or password',
       });
@@ -85,6 +88,7 @@ export const authProvider: AuthProvider & {
 
       if (!user.data) {
         toast({
+          variant: 'destructive',
           title: 'Error',
           description: 'Refresh failed',
         });
@@ -102,6 +106,7 @@ export const authProvider: AuthProvider & {
       };
     } catch (error) {
       toast({
+        variant: 'destructive',
         title: 'Error',
         description: 'Refresh failed',
       });
@@ -160,5 +165,53 @@ export const authProvider: AuthProvider & {
     }
 
     return { error };
+  },
+  forgotPassword: async ({ email, returnUrl }: AuthForgotPw) => {
+    try {
+      console.log('called fw');
+      const response = await authApi.authControllerForgotPassword({
+        authForgotPasswordDto: {
+          email,
+          returnUrl,
+        },
+      });
+
+      if (!response) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Invalid email',
+        });
+        throw new Error('Invalid email');
+      }
+
+      toast({
+        variant: 'default',
+        title: 'Success',
+        description: 'Check your email for further instructions',
+      });
+
+      return {
+        success: true,
+        redirectTo: '/forgot-password',
+        successNotification: {
+          message: 'Check your email for further instructions',
+          description: 'Check your email for further instructions',
+        },
+      };
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Invalid email',
+      });
+      return {
+        success: false,
+        error: {
+          name: 'ForgotPasswordError',
+          message: 'Invalid email',
+        },
+      };
+    }
   },
 };

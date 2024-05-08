@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import {
   useActiveAuthProvider,
@@ -8,7 +10,15 @@ import {
   LoginFormTypes,
   LoginPageProps,
 } from '@refinedev/core';
+import Image from 'next/image';
 import { useTranslate } from '@refinedev/core';
+import { useForm } from 'react-hook-form';
+import { TextInput } from '@/components/form/form-handle/text-input';
+import { PasswordInput } from '@/components/form/form-handle/password-input';
+import { AuthLogin } from '@/components/validators';
+import { classValidatorResolver } from '@hookform/resolvers/class-validator';
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
 
 type DivPropsType = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 type FormPropsType = React.DetailedHTMLProps<
@@ -36,8 +46,6 @@ export const LoginPage: React.FC<LoginProps> = ({
 
   const ActiveLink = routerType === 'legacy' ? LegacyLink : Link;
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
 
   const translate = useTranslate();
@@ -76,82 +84,83 @@ export const LoginPage: React.FC<LoginProps> = ({
     return null;
   };
 
+  const loginForm = useForm<AuthLogin>({
+    resolver: classValidatorResolver(AuthLogin),
+    defaultValues: new AuthLogin({
+      email: process.env.NEXT_PUBLIC_EMAIL_MANAGER ?? '',
+      password: process.env.NEXT_PUBLIC_PASSWORD_MANAGER ?? '',
+    }),
+  });
+  const {
+    formState: { isSubmitting },
+    handleSubmit,
+  } = loginForm;
+
+  const onSubmit = ({ email, password, remember }: LoginFormTypes) => {
+    login({ email, password, remember });
+  };
+
   const content = (
-    <div {...contentProps}>
-      <h1 className="text-center">{translate('pages.login.title', 'Sign in to your account')}</h1>
+    <div {...contentProps} className="p-6 space-y-4 md:space-y-6 sm:p-8">
+      <Image width={100} height={50} src="/images/logo-red.png" alt="techcell-logo" priority />
+      <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-1">
+        {translate('pages.login.title', 'Đăng nhập')}
+      </h1>
+      <span className="text-[14px]">
+        {translate('pages.login.subTitle', 'Tiếp tục để đến với trang quản trị Techcell')}
+      </span>
+
       {renderProviders()}
       {!hideForm && (
         <>
           <hr />
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              login({ email, password, remember });
-            }}
-            {...formProps}
-          >
-            <div className="flex flex-col p-6">
-              <label htmlFor="email-input">{translate('pages.login.fields.email', 'Email')}</label>
-              <input
-                id="email-input"
-                name="email"
-                type="text"
-                className="mb-4 p-2 border rounded"
-                autoCorrect="off"
-                spellCheck={false}
-                autoCapitalize="off"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <label htmlFor="password-input">
-                {translate('pages.login.fields.password', 'Password')}
-              </label>
-              <input
-                id="password-input"
-                type="password"
-                name="password"
-                required
-                className="mb-4 p-2 border rounded"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {rememberMe ?? (
-                <>
-                  <label htmlFor="remember-me-input" className="flex items-center mb-4">
-                    <input
-                      id="remember-me-input"
-                      name="remember"
-                      type="checkbox"
-                      className="mr-2"
-                      checked={remember}
-                      value={remember.toString()}
-                      onChange={() => {
-                        setRemember(!remember);
-                      }}
-                    />
-                    {translate('pages.login.buttons.rememberMe', 'Remember me')}
-                  </label>
-                </>
-              )}
-              {forgotPasswordLink ??
-                renderLink(
-                  '/forgot-password',
-                  translate('pages.login.buttons.forgotPassword', 'Forgot password?'),
+          <Form {...loginForm}>
+            <form onSubmit={handleSubmit(onSubmit)} {...formProps}>
+              <div className="flex flex-col p-2">
+                <TextInput<AuthLogin> name="email" label="Email" className="mb-5" />
+                <PasswordInput<AuthLogin> name="password" label="Mật khẩu" className="mb-4" />
+                {rememberMe ?? (
+                  <>
+                    <label htmlFor="remember-me-input" className="flex items-center mb-4">
+                      <input
+                        id="remember-me-input"
+                        name="remember"
+                        type="checkbox"
+                        className="mr-2"
+                        checked={remember}
+                        value={remember.toString()}
+                        onChange={() => {
+                          setRemember(!remember);
+                        }}
+                      />
+                      {translate('pages.login.buttons.rememberMe', 'Ghi nhớ')}
+                    </label>
+                  </>
                 )}
-              <input
-                type="submit"
-                value={translate('pages.login.signin', 'Sign in')}
-                className="mb-4 p-2 bg-blue-500 text-white rounded cursor-pointer"
-              />
-              {registerLink ?? (
-                <span>
-                  {translate('pages.login.buttons.noAccount', 'Don’t have an account?')}{' '}
-                  {renderLink('/register', translate('pages.login.register', 'Sign up'))}
-                </span>
-              )}
-            </div>
-          </form>
+
+                <Button
+                  type="submit"
+                  className="w-full mt-4"
+                  isLoading={isSubmitting}
+                  variant="red"
+                >
+                  Đăng nhập
+                </Button>
+
+                {forgotPasswordLink ??
+                  renderLink(
+                    '/forgot-password',
+                    translate('pages.login.buttons.forgotPassword', 'Forgot password?'),
+                  )}
+                {registerLink ?? (
+                  <span>
+                    {translate('pages.login.buttons.noAccount', 'Don’t have an account?')}{' '}
+                    {renderLink('/register', translate('pages.login.register', 'Sign up'))}
+                  </span>
+                )}
+              </div>
+            </form>
+          </Form>
         </>
       )}
       {registerLink !== false && hideForm && (
@@ -160,6 +169,12 @@ export const LoginPage: React.FC<LoginProps> = ({
           {renderLink('/register', translate('pages.login.register', 'Sign up'))}
         </div>
       )}
+      <p className="text-center text-sm font-medium">
+        Trang chủ:{' '}
+        <Link to="https://techcell.cloud/" className="font-semibold underline">
+          https://techcell.cloud/
+        </Link>
+      </p>
     </div>
   );
 

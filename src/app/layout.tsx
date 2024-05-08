@@ -10,7 +10,6 @@ import { dataProvider } from '@/providers/data-provider';
 import '@/styles/global.css';
 
 import { Toaster } from '@/components/ui/toaster';
-import Favicon from '@/public/images/favicon.ico';
 import { ThemeProvider } from '@/providers/theme-provider';
 import { quickSandFont } from '@/config/font';
 
@@ -19,17 +18,19 @@ export const metadata: Metadata = {
   description: 'Trang quản trị Techcell',
   icons: {
     icon: {
-      url: Favicon.src,
+      url: '/images/favicon.ico',
       type: 'image/png',
     },
-    shortcut: { url: Favicon.src, type: 'image/png' },
+    shortcut: { url: '/images/favicon.ico', type: 'image/png' },
   },
 };
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en" style={{ colorScheme: 'light' }} className={`${quickSandFont.className} light`}>
@@ -86,7 +87,10 @@ export default function RootLayout({
                     projectId: 'nOqabo-012lBO-NnRYWu',
                   }}
                 >
-                  <main className="w-full">{children}</main>
+                  <main className="w-full">
+                    {children}
+                    {modal}
+                  </main>
                   <Toaster />
                   <RefineKbar />
                 </Refine>
