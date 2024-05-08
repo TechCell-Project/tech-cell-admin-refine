@@ -8,7 +8,6 @@ export default async function Login() {
   if (data.authenticated) {
     redirect(data?.redirectTo || '/');
   }
-  console.log(data.error);
 
   return <AuthPage type="login" error={data?.error} />;
 }
