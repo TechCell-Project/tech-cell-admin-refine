@@ -44,7 +44,6 @@ export default function RootLayout({
                     show: '/users/show/:id',
                     meta: {
                       canDelete: false,
-                      dataProviderName: 'users',
                     },
                   },
                   {
