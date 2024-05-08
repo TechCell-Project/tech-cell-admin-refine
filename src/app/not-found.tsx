@@ -1,6 +1,6 @@
 'use client';
 
-import { ErrorComponent } from '@components/pages/error';
+import { ErrorComponent } from '@/components/pages/error';
 import { Authenticated } from '@refinedev/core';
 import { Suspense } from 'react';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import axiosInstance from '@lib/axios';
+import axiosInstance from '@/lib/axios';
 import { CrudSort, DataProvider, Pagination } from '@refinedev/core';
 
 function handlePagination(searchParams: URLSearchParams, pagination?: Pagination) {

@@ -19,8 +19,8 @@
       }
     ],
     "paths": {
-      "@*": ["./src/*"],
-      "@pages/*": ["./src/components/pages/*"]
+      "@/*": ["./src/*"],
+      "@/pages/*": ["./src/components/pages/*"]
     },
     "incremental": true
   },

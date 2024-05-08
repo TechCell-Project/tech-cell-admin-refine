@@ -1,6 +1,6 @@
 import axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { authProvider } from '@providers/auth-provider/auth-provider';
+import { authProvider } from '@/providers/auth-provider/auth-provider';
 
 const axiosInstance = axios.create({
   headers: {

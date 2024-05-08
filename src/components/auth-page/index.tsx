@@ -1,7 +1,7 @@
 'use client';
 
 import type { AuthPageProps as AuthPagePropsCore, HttpError } from '@refinedev/core';
-import { AuthPage as AuthPageBase } from '@pages/auth';
+import { AuthPage as AuthPageBase } from '@/pages/auth';
 
 type AuthPageProps = AuthPagePropsCore & {
   authenticated?: boolean;
@@ -15,10 +15,7 @@ export const AuthPage = (props: AuthPageProps) => {
       {...props}
       renderContent={(content) => (
         <div>
-          <p className="p-2 text-blue-700 bg-blue-200 border border-blue-300 text-center">
-            email: demo@refine.dev
-            <br /> password: demodemo
-          </p>
+          <p className="p-2 text-blue-700 bg-blue-200 border border-blue-300 text-center"></p>
           {content}
         </div>
       )}
