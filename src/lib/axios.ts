@@ -4,6 +4,7 @@ import { authProvider } from '@/providers/auth-provider/auth-provider';
 
 const axiosInstance = axios.create({
   headers: {
+    'Content-Type': 'application/json',
     Authorization: `Bearer ${authProvider.getAuthData()?.accessToken || ''}`,
   },
 });

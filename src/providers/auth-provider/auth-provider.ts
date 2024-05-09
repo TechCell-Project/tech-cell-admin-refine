@@ -1,6 +1,6 @@
 'use client';
 
-import { AuthProvider } from '@refinedev/core';
+import { AuthProvider, UpdatePasswordFormTypes } from '@refinedev/core';
 import {
   AuthApi,
   AuthEmailLoginDto,
@@ -10,13 +10,25 @@ import {
 import Cookies from 'js-cookie';
 import { toast } from '@/components/ui/use-toast';
 import { AuthActionResponse } from '@refinedev/core/dist/contexts/auth/types';
-import { AuthForgotPw } from '@/components/validators';
+import { AuthForgotPw, AuthResetPassword } from '@/components/validators';
+import { AxiosError } from 'axios';
+
+export type UpdatePasswordTypes =
+  | {
+      type: 'reset';
+      data: AuthResetPassword;
+    }
+  | {
+      type: 'update';
+      data: UpdatePasswordFormTypes & { oldPassword: string };
+    };
 
 const authApi = new AuthApi();
 
 export const authProvider: AuthProvider & {
   refresh: () => Promise<AuthActionResponse & { tokenData?: RefreshTokenResponseDto }>;
   getAuthData: () => LoginResponseDto | null;
+  resetPassword: (data: AuthResetPassword) => Promise<AuthActionResponse>;
 } = {
   login: async ({ email, password, remember }: AuthEmailLoginDto & { remember: boolean }) => {
     try {
@@ -211,6 +223,129 @@ export const authProvider: AuthProvider & {
           name: 'ForgotPasswordError',
           message: 'Invalid email',
         },
+      };
+    }
+  },
+  resetPassword: async ({ hash, password }: AuthResetPassword) => {
+    try {
+      const res = await authApi.authControllerResetPassword({
+        authResetPasswordDto: {
+          hash,
+          password,
+        },
+      });
+
+      toast({
+        variant: 'default',
+        title: 'Thành công',
+        description: 'Yêu cầu đặt lại thành công, vui lòng kiểm tra email của bạn',
+      });
+
+      return {
+        success: true,
+        redirectTo: '/login',
+        successNotification: {
+          message: 'Yêu cầu đặt lại thành công, vui lòng kiểm tra email của bạn',
+          description: 'Yêu cầu đặt lại thành công, vui lòng kiểm tra email của bạn',
+        },
+      };
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Thất bại',
+        description: 'Yêu cầu đặt lại không thành công, vui lòng thử lại sau',
+      });
+      return {
+        success: false,
+        error: {
+          name: 'ResetPasswordError',
+          message: 'Yêu cầu đặt lại không thành công, vui lòng thử lại sau',
+        },
+      };
+    }
+  },
+  updatePassword: async ({ type, data }: UpdatePasswordTypes) => {
+    try {
+      switch (type) {
+        case 'reset': {
+          await authApi.authControllerResetPassword({
+            authResetPasswordDto: {
+              hash: data.hash,
+              password: data.password,
+            },
+          });
+
+          toast({
+            variant: 'default',
+            title: 'Thành công',
+            description: 'Mật khẩu đã được đặt lại thành công',
+          });
+          return {
+            success: true,
+            redirectTo: '/login',
+          };
+        }
+        case 'update': {
+          const auth = Cookies.get('auth');
+          const parsedUser: LoginResponseDto = auth ? JSON.parse(auth) : null;
+
+          await authApi.authControllerUpdateMe(
+            {
+              authUpdateDto: {
+                password: data.password,
+                oldPassword: data.oldPassword,
+              },
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${parsedUser?.accessToken}`,
+              },
+            },
+          );
+
+          toast({
+            variant: 'default',
+            title: 'Thành công',
+            description: 'Password change successfully',
+          });
+          return {
+            success: true,
+            redirectTo: '/',
+          };
+        }
+        default:
+          toast({
+            variant: 'destructive',
+            title: 'Thất bại',
+            description: 'Yêu cầu không hợp lệ',
+          });
+          return {
+            success: false,
+          };
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.data?.code === 'auth.invalidHash') {
+          toast({
+            variant: 'destructive',
+            title: 'Thất bại',
+            description: 'Yêu cầu không hợp lệ hoặc đã hết hạn',
+          });
+
+          return {
+            success: false,
+          };
+        }
+      }
+
+      toast({
+        variant: 'destructive',
+        title: 'Thất bại',
+        description: 'Đổi mật khẩu không thành công',
+      });
+
+      return {
+        success: false,
       };
     }
   },
