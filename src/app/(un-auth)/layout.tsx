@@ -12,7 +12,7 @@ export default async function UnAuthLayout({ children }: React.PropsWithChildren
   const data = await getData();
 
   if (data.authenticated) {
-    return redirect(data?.redirectTo || '/users');
+    return redirect(data?.redirectTo || '/users/staffs');
   }
 
   return <>{children}</>;

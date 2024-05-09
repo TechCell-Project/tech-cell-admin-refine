@@ -3,6 +3,7 @@
 import { useNavigation } from '@refinedev/core';
 import { useTable } from '@refinedev/react-table';
 import { ColumnDef, flexRender } from '@tanstack/react-table';
+import Link from 'next/link';
 import React from 'react';
 
 /**
@@ -92,6 +93,7 @@ export default function CategoryList() {
           justifyContent: 'space-between',
         }}
       >
+        <Link href="/forgot-password">Create</Link>
         <h1>List</h1>
         <button onClick={() => create('categories')}>Create</button>
       </div>

@@ -22,6 +22,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@/app/*": ["./src/app/*"],
       "@/pages/*": ["./src/components/pages/*"]
     },
     "incremental": true

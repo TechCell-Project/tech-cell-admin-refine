@@ -27,10 +27,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
+  unauth: unauth,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
+  unauth: React.ReactNode;
 }>) {
   return (
     <html lang="en" style={{ colorScheme: 'light' }} className={`${quickSandFont.className} light`}>
@@ -89,7 +89,7 @@ export default function RootLayout({
                 >
                   <main className="w-full">
                     {children}
-                    {modal}
+                    {unauth}
                   </main>
                   <Toaster />
                   <RefineKbar />

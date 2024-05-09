@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: 'Quên mật khẩu - Trang quản trị Techcell',
 };
 
-export default async function LoginParallelLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default function ForgotPasswordParallelLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   return <>{children}</>;
 }

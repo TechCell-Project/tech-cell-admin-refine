@@ -6,7 +6,8 @@
     "nextjs",
     "Oqabo",
     "refinedev",
-    "tanstack"
+    "tanstack",
+    "unauth"
   ],
   "conventionalCommits.scopes": [
     "auth",
