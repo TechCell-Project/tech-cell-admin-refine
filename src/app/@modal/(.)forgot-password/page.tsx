@@ -13,12 +13,7 @@ function ForgotPasswordParallel() {
   };
 
   return (
-    <DialogDisplay
-      trigger={'Quên mật khẩu'}
-      title="Quên mật khẩu"
-      open={true}
-      setOpen={handleClose}
-    >
+    <DialogDisplay trigger={<></>} title="Quên mật khẩu" open={true} setOpen={handleClose}>
       <ForgotPasswordForm handleClose={handleClose} />
     </DialogDisplay>
   );

@@ -22,8 +22,9 @@ function ForgotPassword() {
           {translate('pages.login.subTitle', 'Tiếp tục để đến khôi phục mật khẩu')}
         </span>
         <div className="flex flex-col p-2">
+          <hr />
           <ForgotPasswordForm
-            handleClose={() => {}}
+            handleClose={() => router.push('/login')}
             cancelButton={
               <>
                 <Button variant="ghost" type="button" onClick={() => router.push('/login')}>

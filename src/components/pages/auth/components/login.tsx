@@ -57,9 +57,11 @@ export const LoginPage: React.FC<LoginProps> = ({
 
   const renderLink = (link: string, text?: string) => {
     return (
-      <ActiveLink to={link} className="text-blue-500 hover:underline">
-        {text}
-      </ActiveLink>
+      <span className="w-full flex justify-center mt-4">
+        <ActiveLink to={link} className="inline-flex text-sm cursor-pointer hover:underline">
+          {text}
+        </ActiveLink>
+      </span>
     );
   };
 
@@ -150,7 +152,7 @@ export const LoginPage: React.FC<LoginProps> = ({
                 {forgotPasswordLink ??
                   renderLink(
                     '/forgot-password',
-                    translate('pages.login.buttons.forgotPassword', 'Forgot password?'),
+                    translate('pages.login.buttons.forgotPassword', 'Quên mật khẩu?'),
                   )}
                 {registerLink ?? (
                   <span>
